@@ -1,6 +1,7 @@
 package fr.funetdelire.oncallscheduler.problem.solver;
 
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -13,7 +14,7 @@ public class OnCallScheduleRandom {
 	private OnCallProblem problem;
 	List<Integer> scheduledThisMonth = new LinkedList<Integer>();
 	Deque<Integer> available = new LinkedList<>();
-	Calendar start;
+	LocalDate start;
 
 	public OnCallScheduleRandom(OnCallProblem problem) {
 		this.problem = problem;
@@ -27,7 +28,7 @@ public class OnCallScheduleRandom {
 		}
 		Collections.shuffle((List<?>) available);
 		
-		start = (Calendar) problem.getStartPoint().clone();
+		start = problem.getStartPoint();
 	}
 	
 	private void assignFistAvailable(int[] schedule, int week) {
@@ -49,14 +50,16 @@ public class OnCallScheduleRandom {
 		OnCallSchedule schedule = new OnCallSchedule(problem);
 		int[] weeksSchedule = schedule.getWeeksSchedule();
 		int[] weekEndsSchedule = schedule.getWeekEndsSchedule();
+		String[] weeksDate = schedule.getWeeksDate();
 	
-		int currentMonth = start.get(Calendar.MONTH);
+		int currentMonth = start.getMonthValue();
 		for (int i = 0 ; i < problem.getNumberOfWeeks() ; i++) {
 			assignFistAvailable(weeksSchedule, i);
 			assignFistAvailable(weekEndsSchedule, i);
+			weeksDate[i] = DateTimeFormatter.ISO_LOCAL_DATE.format(start);
 			
-			start.roll(Calendar.WEEK_OF_YEAR, true);
-			int newMonth = start.get(Calendar.MONTH);
+			start = start.plusWeeks(1);
+			int newMonth = start.getMonthValue();
 			if (newMonth > currentMonth) {
 				currentMonth = newMonth;
 				makeAvailableNewMonth();
