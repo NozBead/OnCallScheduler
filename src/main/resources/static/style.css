@@ -12,3 +12,7 @@ td {
 table {
 	border-collapse: collapse;
 }
+
+input[type="color"] {
+	height: 1.7em;
+}
