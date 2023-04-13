@@ -1,13 +1,13 @@
 package fr.funetdelire.oncallscheduler.problem;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 
 public class OnCallProblem {
 	private int numberOfWeeks;
 	private int numberOfPeople;
-	private Calendar startPoint;
+	private LocalDate startPoint;
 	
-	public OnCallProblem(int numberOfWeeks, int numberOfPeople, Calendar startPoint) {
+	public OnCallProblem(int numberOfWeeks, int numberOfPeople, LocalDate startPoint) {
 		this.numberOfWeeks = numberOfWeeks;
 		this.numberOfPeople = numberOfPeople;
 		this.startPoint = startPoint;
@@ -21,7 +21,7 @@ public class OnCallProblem {
 		return numberOfPeople;
 	}
 
-	public Calendar getStartPoint() {
+	public LocalDate getStartPoint() {
 		return startPoint;
 	}
 
@@ -32,7 +32,7 @@ public class OnCallProblem {
 	public boolean checkSchedule(OnCallSchedule schedule) {
 		int[] weeksSchedule = schedule.getWeeksSchedule();
 		int[] weekEndsSchedule = schedule.getWeekEndsSchedule();
-		Calendar current = (Calendar) startPoint.clone();
+		LocalDate current = startPoint;
 		int[] lastMonthScheduled = new int[numberOfPeople];
 		
 		if (weeksSchedule.length != weekEndsSchedule.length || weeksSchedule.length != numberOfWeeks) {
@@ -42,7 +42,7 @@ public class OnCallProblem {
 		for (int i = 0 ; i < numberOfWeeks ; i++) {
 			int weekPerson = weeksSchedule[i];
 			int weekEndPerson = weekEndsSchedule[i];
-			int currentMonth = current.get(Calendar.MONTH) + 1;
+			int currentMonth = current.getMonthValue();
 			
 			// The scheduled person must exist
 			if (!personExists(weekPerson) || !personExists(weekEndPerson)) {
@@ -62,7 +62,7 @@ public class OnCallProblem {
 			
 			lastMonthScheduled[weekPerson] = currentMonth;
 			lastMonthScheduled[weekEndPerson] = currentMonth;
-			current.roll(Calendar.WEEK_OF_YEAR, true);
+			current = current.plusWeeks(1);
 		}
 		
 		return true;
