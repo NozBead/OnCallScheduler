@@ -24,11 +24,7 @@ public class OnCallSchedulerController {
 		
 		OnCallProblem problem = new OnCallProblem(52, numberOfPeople, date);
 		OnCallScheduleRandom solver = new OnCallScheduleRandom(problem);
-		
-		OnCallSchedule schedule = solver.generate();
-		while(!problem.checkSchedule(schedule)) {
-			schedule = solver.generate();
-		}
-		return schedule;
+	
+		return solver.generate();
 	}
 }

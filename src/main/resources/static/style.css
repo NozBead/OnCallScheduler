@@ -1,0 +1,14 @@
+td {
+	border: 1px black solid;
+	min-width: 1em;
+	height: 1em;
+	text-align: center;
+}
+
+.off{
+	background-color: dimgray;
+}
+
+table {
+	border-collapse: collapse;
+}
