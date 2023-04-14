@@ -2,8 +2,10 @@ package fr.funetdelire.oncallscheduler.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,13 +20,18 @@ import fr.funetdelire.oncallscheduler.problem.solver.OnCallScheduleRandom;
 public class OnCallSchedulerController {
 	
 	@GetMapping()
-	public OnCallSchedule get(@RequestParam String startDate, @RequestParam int numberOfPeople) {
-		LocalDate date = LocalDate.parse(startDate, DateTimeFormatter.ISO_LOCAL_DATE);
-		date = date.with(ChronoField.DAY_OF_WEEK, 1);
+	public ResponseEntity<OnCallSchedule> get(@RequestParam String startDate, @RequestParam int numberOfPeople, @RequestParam int numberOfWeeks) {
+		try {
+			LocalDate date = LocalDate.parse(startDate, DateTimeFormatter.ISO_LOCAL_DATE);
+			date = date.with(ChronoField.DAY_OF_WEEK, 1);
+			
+			OnCallProblem problem = new OnCallProblem(numberOfWeeks, numberOfPeople, date);
+			OnCallScheduleRandom solver = new OnCallScheduleRandom(problem);
 		
-		OnCallProblem problem = new OnCallProblem(52, numberOfPeople, date);
-		OnCallScheduleRandom solver = new OnCallScheduleRandom(problem);
-	
-		return solver.generate();
+			return ResponseEntity.ok(solver.generate());
+		}
+		catch (DateTimeParseException e) {
+			return ResponseEntity.badRequest().build();
+		}
 	}
 }

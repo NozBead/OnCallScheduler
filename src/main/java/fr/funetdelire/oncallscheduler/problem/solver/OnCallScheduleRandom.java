@@ -1,7 +1,6 @@
 package fr.funetdelire.oncallscheduler.problem.solver;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -50,13 +49,11 @@ public class OnCallScheduleRandom {
 		OnCallSchedule schedule = new OnCallSchedule(problem);
 		int[] weeksSchedule = schedule.getWeeksSchedule();
 		int[] weekEndsSchedule = schedule.getWeekEndsSchedule();
-		String[] weeksDate = schedule.getWeeksDate();
 	
 		int currentMonth = start.getMonthValue();
 		for (int i = 0 ; i < problem.getNumberOfWeeks() ; i++) {
 			assignFistAvailable(weeksSchedule, i);
 			assignFistAvailable(weekEndsSchedule, i);
-			weeksDate[i] = DateTimeFormatter.ISO_LOCAL_DATE.format(start);
 			
 			start = start.plusWeeks(1);
 			int newMonth = start.getMonthValue();

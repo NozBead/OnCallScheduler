@@ -7,23 +7,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class OnCallSchedule {
 	private int[] weeksSchedule;
 	private int[] weekEndsSchedule;
-	private String[] weeksDate;
 	@JsonIgnore
 	private OnCallProblem problem;
 	
 	public OnCallSchedule(OnCallProblem problem) {
 		this.problem = problem;
 		this.weeksSchedule = new int[problem.getNumberOfWeeks()];
-		this.weeksDate = new String[problem.getNumberOfWeeks()];
 		this.weekEndsSchedule = new int[problem.getNumberOfWeeks()];
 	}
 	
 	public OnCallProblem getProblem() {
 		return problem;
-	}
-
-	public String[] getWeeksDate() {
-		return weeksDate;
 	}
 
 	public int[] getWeeksSchedule() {
