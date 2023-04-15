@@ -27,7 +27,7 @@ export class PersonCreator {
 
     addPerson(name, color) {
         const className = this.createClass(color);
-        const person = new Person(name, className, this.line);
+        const person = new Person(name, className, color);
         this.moveToNewLine(person.name, className);
         this.persons.push(person);
     }

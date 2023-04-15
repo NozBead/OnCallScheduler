@@ -1,7 +1,7 @@
 export class Person {
-    constructor(name, className, line) {
+    constructor(name, className, color) {
         this.name = name;
         this.className = className;
-        this.line = line;
+        this.color = color;
     }
 }

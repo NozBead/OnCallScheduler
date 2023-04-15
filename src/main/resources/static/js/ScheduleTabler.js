@@ -1,20 +1,36 @@
 export class ScheduleTabler {
-    monthLine = document.createElement("tr");
-    daysLabelsLine = document.createElement("tr");
-    daysNumbersLine = document.createElement("tr");
     daysLabels = ["D","L","M","Me","J","V","S"];
-    monthsLabels = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet", "Août", "Septembte", "Novembre", "Décembre"];
+    monthsLabels = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
 
     constructor(persons) {
         this.persons = persons;
+    }
+
+    createTable(tbody) {
+        const table = document.createElement("table");
+        table.appendChild(this.createHeader());
         const emptySpace = document.createElement("td");
         emptySpace.setAttribute("rowspan", "3");
         this.monthLine.appendChild(emptySpace);
+        table.appendChild(tbody);
+        this.names = tbody;
+        return table;
     }
 
-    addPersonDay(person, className) {
+    createHeader() {
+        this.monthLine = document.createElement("tr");
+        this.daysLabelsLine = document.createElement("tr");
+        this.daysNumbersLine = document.createElement("tr");
+        const header = document.createElement("thead");
+        header.appendChild(this.monthLine);
+        header.appendChild(this.daysLabelsLine);
+        header.appendChild(this.daysNumbersLine);
+        return header;
+    }
+
+    addPersonDay(k, className) {
         const element = document.createElement("td");
-        person.line.appendChild(element);
+        this.lines[k].appendChild(element);
         element.setAttribute("class", className);
     }
 
@@ -47,16 +63,35 @@ export class ScheduleTabler {
         this.monthLine.appendChild(monthElement);
     }
 
+    initTable() {
+        this.lines = this.names.querySelectorAll("tr");
+        this.names = this.names.cloneNode(true);
+    }
+
+    splitTable(tables) {
+        const table = this.createTable(this.names);
+        this.initTable();
+        tables.push(table);
+    }
+
     tableSchedule(data, startDate) {
+        this.initTable();
+        const tables = [];
+
         let currentMonth = startDate.getMonth();
+        let month = 0;
         this.addMonthHeader(startDate);
         for (let i = 0 ; i < data.weekEndsSchedule.length ; i++) {
             for (let j = 0 ; j < 7 ; j++) {
                 let off = j >= 5;
-                
+
                 const newMonth = startDate.getMonth();
-                if (currentMonth < newMonth) {
+                if (currentMonth != newMonth) {
                     currentMonth = newMonth;
+                    month++;
+                    if (month != 0 && month % 2 == 0) {
+                        this.splitTable(tables);
+                    }
                     this.addMonthHeader(startDate);
                 }
 
@@ -73,11 +108,13 @@ export class ScheduleTabler {
                     else if (off) {
                         className = "off";
                     }
-                    this.addPersonDay(p, className);
+                    this.addPersonDay(k, className);
                 }
 
                 startDate.setDate(startDate.getDate() + 1);
             }
         }
+
+        return tables;
     }
 }
