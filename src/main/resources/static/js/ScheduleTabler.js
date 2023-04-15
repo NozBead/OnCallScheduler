@@ -6,37 +6,36 @@ export class ScheduleTabler {
         this.persons = persons;
     }
 
-    createTable(tbody) {
+    createTable() {
         const table = document.createElement("table");
         table.appendChild(this.createHeader());
         const emptySpace = document.createElement("td");
         emptySpace.setAttribute("rowspan", "3");
         this.monthLine.appendChild(emptySpace);
-        table.appendChild(tbody);
-        this.names = tbody;
+        table.appendChild(this.names);
         return table;
     }
 
-    createResult() {
+    createResult(nbDays, nbWeekEnds) {
         this.initTable();
         const table = document.createElement("table");
         const header = document.createElement("thead");
-        const nbDays = document.createElement("td");
-        nbDays.innerHTML = "Jours d'astreinte";
-        const nbWeekEnds = document.createElement("td");
-        nbWeekEnds.innerHTML = "Weekends d'astreinte";
+        const nbDaysElement = document.createElement("td");
+        nbDaysElement.innerHTML = "Jours d'astreinte";
+        const nbWeekEndsElement = document.createElement("td");
+        nbWeekEndsElement.innerHTML = "Weekends d'astreinte";
         const emptySpace = document.createElement("td");
         header.appendChild(emptySpace);
-        header.appendChild(nbDays);
-        header.appendChild(nbWeekEnds);
+        header.appendChild(nbDaysElement);
+        header.appendChild(nbWeekEndsElement);
         table.appendChild(header);
         table.appendChild(this.names);
         const lines = this.names.querySelectorAll("tr");
         for (let i = 0 ; i < lines.length ; i++) {
             const nbDaysCell = document.createElement("td");
-            nbDaysCell.innerHTML = this.nbDays[i];
+            nbDaysCell.innerHTML = nbDays[i];
             const nbWeekEndsCell = document.createElement("td");
-            nbWeekEndsCell.innerHTML = this.nbWeekEnds[i];
+            nbWeekEndsCell.innerHTML = nbWeekEnds[i];
             lines[i].appendChild(nbDaysCell);
             lines[i].appendChild(nbWeekEndsCell);
         }
@@ -95,18 +94,18 @@ export class ScheduleTabler {
     }
 
     splitTable() {
-        const table = this.createTable(this.names);
-        this.initTable();
+        const table = this.createTable();
         this.tables.push(table);
+        this.initTable();
     }
 
     parseData(data, startDate) {
         this.tables = [];
         this.splitTable();
-        this.nbDays = new Array(this.persons.length);
-        this.nbDays.fill(0);
-        this.nbWeekEnds = new Array(this.persons.length);
-        this.nbWeekEnds.fill(0);
+        const nbDays = new Array(this.persons.length);
+        nbDays.fill(0);
+        const nbWeekEnds = new Array(this.persons.length);
+        nbWeekEnds.fill(0);
 
 
         let currentMonth = startDate.getMonth();
@@ -115,9 +114,9 @@ export class ScheduleTabler {
         for (let i = 0 ; i < data.weekEndsSchedule.length ; i++) {
             const weekPerson = data.weeksSchedule[i];
             const weekEndPerson = data.weekEndsSchedule[i];
-            this.nbDays[weekPerson] += 5;
-            this.nbDays[weekEndPerson] += 4;
-            this.nbWeekEnds[weekEndPerson]++;
+            nbDays[weekPerson] += 5;
+            nbDays[weekEndPerson] += 4;
+            nbWeekEnds[weekEndPerson]++;
             for (let j = 0 ; j < 7 ; j++) {
                 let off = j >= 5;
 
@@ -150,6 +149,6 @@ export class ScheduleTabler {
                 startDate.setDate(startDate.getDate() + 1);
             }
         }
-        this.result = this.createResult();
+        this.result = this.createResult(nbDays, nbWeekEnds);
     }
 }

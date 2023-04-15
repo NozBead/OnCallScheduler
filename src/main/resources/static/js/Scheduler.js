@@ -30,6 +30,7 @@ generateBox.querySelector("button").addEventListener("click", e => {
         .then(data => {
             creator.line.style.display = "none"; 
             generateBox.style.display = "none";
+            body.querySelectorAll("button").forEach(b => b.style.display = "none");
             body.removeChild(table);
             tabler.parseData(data, new Date(generateDate.value));
             tabler.tables.forEach(t => body.appendChild(t));
