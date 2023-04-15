@@ -6,10 +6,13 @@ const tabler = new ScheduleTabler(persons);
 const creator = new PersonCreator(persons);
 
 const tableBody = document.createElement("tbody");
-const table = tabler.createTable(tableBody);
+const table = document.createElement("table");
 const body = document.querySelector("body");
+table.append(tableBody);
 body.appendChild(table);
 tableBody.appendChild(creator.line);
+
+tabler.names = tableBody;
 
 const generateBox = document.querySelector("#generateBox");
 const generateDate = generateBox.querySelector('input[type="date"]');
@@ -27,8 +30,10 @@ generateBox.querySelector("button").addEventListener("click", e => {
         .then(data => {
             creator.line.style.display = "none"; 
             generateBox.style.display = "none";
-            tabler.tableSchedule(data, new Date(generateDate.value))
-                .forEach(t => body.appendChild(t));
+            body.removeChild(table);
+            tabler.parseData(data, new Date(generateDate.value));
+            tabler.tables.forEach(t => body.appendChild(t));
+            body.appendChild(tabler.result);
         })
 });
 

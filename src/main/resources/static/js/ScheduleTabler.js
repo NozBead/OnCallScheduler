@@ -17,6 +17,32 @@ export class ScheduleTabler {
         return table;
     }
 
+    createResult() {
+        this.initTable();
+        const table = document.createElement("table");
+        const header = document.createElement("thead");
+        const nbDays = document.createElement("td");
+        nbDays.innerHTML = "Jours d'astreinte";
+        const nbWeekEnds = document.createElement("td");
+        nbWeekEnds.innerHTML = "Weekends d'astreinte";
+        const emptySpace = document.createElement("td");
+        header.appendChild(emptySpace);
+        header.appendChild(nbDays);
+        header.appendChild(nbWeekEnds);
+        table.appendChild(header);
+        table.appendChild(this.names);
+        const lines = this.names.querySelectorAll("tr");
+        for (let i = 0 ; i < lines.length ; i++) {
+            const nbDaysCell = document.createElement("td");
+            nbDaysCell.innerHTML = this.nbDays[i];
+            const nbWeekEndsCell = document.createElement("td");
+            nbWeekEndsCell.innerHTML = this.nbWeekEnds[i];
+            lines[i].appendChild(nbDaysCell);
+            lines[i].appendChild(nbWeekEndsCell);
+        }
+        return table;
+    }
+
     createHeader() {
         this.monthLine = document.createElement("tr");
         this.daysLabelsLine = document.createElement("tr");
@@ -68,20 +94,30 @@ export class ScheduleTabler {
         this.names = this.names.cloneNode(true);
     }
 
-    splitTable(tables) {
+    splitTable() {
         const table = this.createTable(this.names);
         this.initTable();
-        tables.push(table);
+        this.tables.push(table);
     }
 
-    tableSchedule(data, startDate) {
-        this.initTable();
-        const tables = [];
+    parseData(data, startDate) {
+        this.tables = [];
+        this.splitTable();
+        this.nbDays = new Array(this.persons.length);
+        this.nbDays.fill(0);
+        this.nbWeekEnds = new Array(this.persons.length);
+        this.nbWeekEnds.fill(0);
+
 
         let currentMonth = startDate.getMonth();
         let month = 0;
         this.addMonthHeader(startDate);
         for (let i = 0 ; i < data.weekEndsSchedule.length ; i++) {
+            const weekPerson = data.weeksSchedule[i];
+            const weekEndPerson = data.weekEndsSchedule[i];
+            this.nbDays[weekPerson] += 5;
+            this.nbDays[weekEndPerson] += 4;
+            this.nbWeekEnds[weekEndPerson]++;
             for (let j = 0 ; j < 7 ; j++) {
                 let off = j >= 5;
 
@@ -90,7 +126,7 @@ export class ScheduleTabler {
                     currentMonth = newMonth;
                     month++;
                     if (month != 0 && month % 2 == 0) {
-                        this.splitTable(tables);
+                        this.splitTable();
                     }
                     this.addMonthHeader(startDate);
                 }
@@ -99,10 +135,10 @@ export class ScheduleTabler {
                 for (let k = 0 ; k < this.persons.length ; k++) {
                     let className = "";
                     const p = this.persons[k];
-                    if (k == data.weeksSchedule[i] && j < 5) {
+                    if (k == weekPerson && j < 5) {
                         className = p.className;
                     }
-                    else if (k == data.weekEndsSchedule[i] && j >= 4) {
+                    else if (k == weekEndPerson && j >= 4) {
                         className = p.className;
                     }
                     else if (off) {
@@ -114,7 +150,6 @@ export class ScheduleTabler {
                 startDate.setDate(startDate.getDate() + 1);
             }
         }
-
-        return tables;
+        this.result = this.createResult();
     }
 }

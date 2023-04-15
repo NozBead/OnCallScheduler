@@ -15,6 +15,7 @@ export class PersonCreator {
     createForm(node) {
         this.name = document.createElement("input");
         this.name.type = "text";
+        this.name.setAttribute("placeholder", "Nom");
         this.color = document.createElement("input");
         this.color.type = "color";
         this.button = document.createElement("button");
