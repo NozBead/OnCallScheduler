@@ -107,9 +107,9 @@ export class ScheduleTabler {
         const nbWeekEnds = new Array(this.persons.length);
         nbWeekEnds.fill(0);
 
-
         let currentMonth = startDate.getMonth();
         let month = 0;
+        let inherited;
         this.addMonthHeader(startDate);
         for (let i = 0 ; i < data.weekEndsSchedule.length ; i++) {
             const weekPerson = data.weeksSchedule[i];
@@ -138,6 +138,11 @@ export class ScheduleTabler {
                         className = p.className;
                     }
                     else if (k == weekEndPerson && j >= 4) {
+                        className = p.className;
+                        inherited = k;
+                    }
+                    else if (j == 0 && inherited == k) {
+                        inherited = null;
                         className = p.className;
                     }
                     else if (off) {
