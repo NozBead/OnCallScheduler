@@ -36,7 +36,17 @@ export class PersonCreator {
     moveToNewLine(placeHolderText, placeHolderClass) {
         this.name.value = "";
         this.parent.removeChild(this.node);
+        const deleteButton = document.createElement("button");
+        const i = this.persons.length;
+        const parent = this.parent;
+        deleteButton.addEventListener("click", e => {
+            const parentParent = parent.parentNode;
+            this.persons.splice(Array.from(parentParent.parentNode.children).indexOf(parentParent), 1);
+            parentParent.parentNode.removeChild(parentParent);
+        });
+        deleteButton.innerHTML = "X";
         this.parent.innerHTML = placeHolderText;
+        this.parent.appendChild(deleteButton);
         this.parent.setAttribute("class", placeHolderClass);
         
         const lineParent = this.line.parentNode;
