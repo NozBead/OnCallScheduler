@@ -18,7 +18,7 @@ The Javascript part creates the schedule table in order to be saved or printed.
 
 ## Running
 
-	java -jar target/server-0.1-SNAPSHOT.jar
+	java -jar target/server-0.1.jar
 
 ## Interface
 
