@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class OnCallSchedule {
+public class OnCallSchedule implements Cloneable {
 	private int[] weeksSchedule;
 	private int[] weekEndsSchedule;
 	@JsonIgnore
@@ -20,6 +20,14 @@ public class OnCallSchedule {
 		return problem;
 	}
 
+	public void setWeeksSchedule(int[] weeksSchedule) {
+		this.weeksSchedule = weeksSchedule;
+	}
+
+	public void setWeekEndsSchedule(int[] weekEndsSchedule) {
+		this.weekEndsSchedule = weekEndsSchedule;
+	}
+
 	public int[] getWeeksSchedule() {
 		return weeksSchedule;
 	}
@@ -33,5 +41,12 @@ public class OnCallSchedule {
 		builder.append("Weeks schedule: \t").append(Arrays.toString(weeksSchedule)).append('\n');
 		builder.append("Weekends schedule: \t").append(Arrays.toString(weekEndsSchedule)).append('\n');
 		return builder.toString();
+	}
+	
+	public OnCallSchedule clone() {
+		OnCallSchedule schedule = new OnCallSchedule(problem);
+		schedule.setWeekEndsSchedule(weekEndsSchedule.clone());
+		schedule.setWeeksSchedule(weeksSchedule.clone());
+		return schedule;
 	}
 }

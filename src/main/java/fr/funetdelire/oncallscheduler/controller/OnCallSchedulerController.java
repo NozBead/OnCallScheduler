@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.funetdelire.oncallscheduler.problem.OnCallProblem;
 import fr.funetdelire.oncallscheduler.problem.OnCallSchedule;
+import fr.funetdelire.oncallscheduler.problem.optimizer.OnCallHillClimber;
 import fr.funetdelire.oncallscheduler.problem.solver.OnCallScheduleRandom;
 
 @RestController
@@ -27,8 +28,10 @@ public class OnCallSchedulerController {
 			
 			OnCallProblem problem = new OnCallProblem(numberOfWeeks, numberOfPeople, date);
 			OnCallScheduleRandom solver = new OnCallScheduleRandom(problem);
-		
-			return ResponseEntity.ok(solver.generate());
+			OnCallHillClimber optimizer = new OnCallHillClimber(problem);
+			OnCallSchedule random = solver.generate();
+			
+			return ResponseEntity.ok(optimizer.optimize(random));
 		}
 		catch (DateTimeParseException e) {
 			return ResponseEntity.badRequest().build();

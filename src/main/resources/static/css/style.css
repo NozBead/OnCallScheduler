@@ -5,6 +5,14 @@ td {
 	text-align: center;
 }
 
+td.monthEnd {
+	border-right: 3px black solid;
+}
+
+td.monthStart {
+	border-left: 3px black solid;
+}
+
 .off{
 	background-color: dimgray;
 }
