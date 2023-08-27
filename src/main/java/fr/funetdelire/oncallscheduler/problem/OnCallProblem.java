@@ -57,7 +57,7 @@ public class OnCallProblem {
 		daysDeviation = Math.sqrt(daysDeviation/numberOfPeople);
 		weekendsDeviation = Math.sqrt(weekendsDeviation/numberOfPeople);
 		
-		return daysDeviation + weekendsDeviation;
+		return daysDeviation*5 + weekendsDeviation*4;
 	}
 	
 	public boolean checkSchedule(OnCallSchedule schedule) {
