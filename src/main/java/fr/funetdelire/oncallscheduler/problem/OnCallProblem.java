@@ -30,24 +30,34 @@ public class OnCallProblem {
 	}
 	
 	public double getFitness(OnCallSchedule schedule) {
-		double deviation = 0;
-		float mean = 0;
 		int[] weeksSchedule = schedule.getWeeksSchedule();
 		int[] weekEndsSchedule = schedule.getWeekEndsSchedule();
+		
 		int[] daysPerPerson = new int[numberOfPeople];
+		double daysDeviation = 0;
+		double daysMean = 0;
+
+		int[] weekendsPerPerson = new int[numberOfPeople];
+		double weekendsDeviation = 0;
+		double weekendsMean = numberOfWeeks / numberOfPeople;
 		
 		for (int i = 0 ; i < numberOfWeeks ; i++) {
-			mean += 7;
+			daysMean += 7;
 			daysPerPerson[weeksSchedule[i]] += 4;
 			daysPerPerson[weekEndsSchedule[i]] += 3;
+			weekendsPerPerson[weekEndsSchedule[i]]++;
 		}
-		mean /= numberOfPeople;
+		daysMean /= numberOfPeople;
 				
 		for (int i = 0 ; i < numberOfPeople ; i++) {
-			deviation += Math.pow(daysPerPerson[i] - mean ,2);
+			daysDeviation += Math.pow(daysPerPerson[i] - daysMean ,2);
+			weekendsDeviation += Math.pow(weekendsPerPerson[i] - weekendsMean ,2);
 		}
 		
-		return Math.sqrt(deviation/numberOfPeople);
+		daysDeviation = Math.sqrt(daysDeviation/numberOfPeople);
+		weekendsDeviation = Math.sqrt(weekendsDeviation/numberOfPeople);
+		
+		return daysDeviation + weekendsDeviation;
 	}
 	
 	public boolean checkSchedule(OnCallSchedule schedule) {
