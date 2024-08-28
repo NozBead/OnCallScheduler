@@ -115,7 +115,7 @@ export class ScheduleTabler {
             const weekPerson = data.weeksSchedule[i];
             const weekEndPerson = data.weekEndsSchedule[i];
             nbDays[weekPerson] += 4;
-            nbDays[weekEndPerson] += 3;
+            nbDays[weekEndPerson] += 4;
             nbWeekEnds[weekEndPerson]++;
             for (let j = 0 ; j < 7 ; j++) {
                 let off = j >= 5;
