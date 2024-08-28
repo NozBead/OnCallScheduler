@@ -1,21 +1,31 @@
 <script setup lang="ts">
 import type { Employee } from '../models/Employee'
+import { toCssColor } from '../models/Color'
+import { computed } from 'vue'
+
 const props = defineProps<{
   employee: Employee
 }>()
+const emit = defineEmits<{
+  delete: [toDelete: Employee]
+}>()
 
-const saturationIndex = Math.floor(props.employee.color / 360) + 1
-const saturation = (saturationIndex) * 50
+const color = computed(() => toCssColor(props.employee.colorIndex))
 </script>
 
 <template>
   <div>
-    {{ employee.name }}
+    <h2>
+      {{ employee.name }}
+    </h2>
+    <button @click="$emit('delete', employee)">Delete</button>
   </div>
 </template>
 
 <style scoped>
 div {
-  background-color: hsl(v-bind(employee.color) v-bind(saturation) 60%);
+  background-color: v-bind(color);
+  display: flex;
+  flex-direction: row;
 }
 </style>
