@@ -13,11 +13,22 @@ const emit = defineEmits<{
 
 <template>
   <div>
-    <li v-for="employee in props.employees">
-      <EmployeeCard @delete="$emit('delete', employee)" :employee="employee"></EmployeeCard>
-    </li>
+    <ul>
+      <li v-for="employee in props.employees">
+        <EmployeeCard @delete="$emit('delete', employee)" :employee="employee"></EmployeeCard>
+      </li>
+    </ul>
     <button @click="$emit('add')">+</button>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+ul {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 40vw;
+  list-style: none;
+  padding: 0;
+}
+</style>

@@ -24,16 +24,52 @@ if (savedSchedule) {
 
 watch(
   employees,
-  async (newEmployee) => {
+  async (newEmployee, oldEmployee) => {
     localStorage.setItem('employees', JSON.stringify(newEmployee))
     localStorage.setItem('freeColorIndexes', JSON.stringify(freeColorIndexes))
-    schedule.value = undefined
-  },
-  {
-    immediate: true,
-    deep: true
+    console.log(newEmployee, oldEmployee)
+    if (newEmployee.length != oldEmployee.length) {
+      schedule.value = undefined
+    }
   }
 )
+
+watch(
+  schedule,
+  async (newSchedule) => {
+    if(newSchedule != undefined) {
+      localStorage.setItem('schedule', JSON.stringify(newSchedule))
+      fillDays(newSchedule, employees.value)
+    }
+    else {
+      localStorage.removeItem('schedule')
+      resetDays(employees.value)
+    }
+  }
+)
+
+function resetDays(employees : Array<Employee>) {
+  for (let i = 0 ; i < employees.length ; i++) {
+    employees[i].daysOnCall = 0
+    employees[i].weekendsOnCall = 0
+  }
+}
+
+function fillDays(schedule : OnCallSchedule, employees : Array<Employee>) {
+  const totalDays = new Array<number>(employees.length)
+  const totalWeekends = new Array<number>(employees.length)
+  totalDays.fill(0)
+  totalWeekends.fill(0)
+  for (let i = 0 ; i < schedule.weekEndsSchedule.length ; i++) {
+    totalDays[schedule.weekEndsSchedule[i]] += 4
+    totalDays[schedule.weeksSchedule[i]] += 5
+    totalWeekends[schedule.weekEndsSchedule[i]]++
+  }
+  for (let i = 0 ; i < employees.length ; i++) {
+    employees[i].daysOnCall = totalDays[i]
+    employees[i].weekendsOnCall = totalWeekends[i]
+  }
+}
 
 function addEmployee() {
   let colorIndex = employees.value.length
@@ -41,9 +77,11 @@ function addEmployee() {
   if (lastFree != undefined) {
     colorIndex = lastFree
   }
-  employees.value.push({
+  employees.value = employees.value.concat({
     name: 'test',
-    colorIndex: colorIndex
+    colorIndex: colorIndex,
+    daysOnCall: 0,
+    weekendsOnCall: 0,
   })
 }
 
@@ -53,7 +91,7 @@ function deleteEmployee(toDelete: Employee) {
 }
 
 async function generateSchedule() {
-  const result = await fetch(`http://funetdelire.fr:8082/schedule?startDate=2024-08-05&numberOfPeople=${employees.value.length}&numberOfWeeks=52`)
+  const result = await fetch(`http://localhost:8080/scheduler?startDate=2024-08-05&numberOfPeople=${employees.value.length}&numberOfWeeks=52`)
   if (result.ok) {
     schedule.value = await result.json()
   }
@@ -72,5 +110,9 @@ async function generateSchedule() {
 main {
   display: flex;
   flex-direction: row;
+  align-items: start;
+  > * {
+    margin: 0 2em;
+  }
 }
 </style>

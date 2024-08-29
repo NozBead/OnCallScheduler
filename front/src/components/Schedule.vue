@@ -3,19 +3,23 @@ import type { OnCallSchedule } from '../models/OnCallSchedule'
 import { toCssColor } from '../models/Color'
 import type { Employee } from '../models/Employee'
 import type { ResolvedSchedule } from '../models/ResolvedSchedule'
+import { computed } from 'vue'
 
 const props = defineProps<{
   schedule: OnCallSchedule
   employees: Array<Employee>
 }>()
 
-const resolvedSchedule = new Array<ResolvedSchedule>()
-for (let i = 0; i < props.schedule.weeksSchedule.length; i++) {
-  resolvedSchedule.push({
-    week: props.employees[props.schedule.weeksSchedule[i]],
-    weekend: props.employees[props.schedule.weekEndsSchedule[i]]
-  })
-}
+const resolvedSchedule = computed(() => {
+  const resolved = new Array<ResolvedSchedule>()
+  for (let i = 0; i < props.schedule.weeksSchedule.length; i++) {
+    resolved.push({
+      week: props.employees[props.schedule.weeksSchedule[i]],
+      weekend: props.employees[props.schedule.weekEndsSchedule[i]]
+    })
+  }
+  return resolved
+})
 </script>
 
 <template>
@@ -45,4 +49,13 @@ for (let i = 0; i < props.schedule.weeksSchedule.length; i++) {
 </template>
 
 <style scoped>
+td {
+  text-align: center;
+  padding: 1em;
+}
+th {
+  padding: 2em;
+  color: rgb(243, 243, 243);
+  background-color: rgb(20, 165, 117);
+}
 </style>
