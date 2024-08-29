@@ -1,21 +1,36 @@
 <script setup lang="ts">
-import EmployeeCard from './EmployeeCard.vue'
+import EmployeeChip from './EmployeeChip.vue'
 import type { Employee } from '../models/Employee'
 
 const props = defineProps<{
   employees: Array<Employee>
 }>()
 const emit = defineEmits<{
-  delete: [toDelete: Employee]
+  delete: [toDelete: number]
   add: []
+  change: [toChange: number, newName: string]
 }>()
+
+function changeEmployee(employee: number, newName: string) {
+  emit('change', employee, newName)
+}
+
+function deleteEmployee(employee: number) {
+  emit('delete', employee)
+}
 </script>
 
 <template>
   <div>
     <ul>
-      <li v-for="employee in props.employees">
-        <EmployeeCard @delete="$emit('delete', employee)" :employee="employee"></EmployeeCard>
+      <li v-for="(employee, index) in props.employees">
+        <EmployeeChip
+          @delete="deleteEmployee"
+          @change="changeEmployee"
+          :employee="employee"
+          :index="index"
+          :editable="true"
+        />
       </li>
     </ul>
     <button @click="$emit('add')">+</button>
@@ -23,12 +38,12 @@ const emit = defineEmits<{
 </template>
 
 <style scoped>
-
 ul {
   display: flex;
-  flex-wrap: wrap;
-  max-width: 40vw;
   list-style: none;
   padding: 0;
+  > * {
+    margin: 0.5em 0.5em;
+  }
 }
 </style>

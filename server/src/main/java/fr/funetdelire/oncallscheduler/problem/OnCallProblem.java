@@ -43,8 +43,8 @@ public class OnCallProblem {
 		
 		for (int i = 0 ; i < numberOfWeeks ; i++) {
 			daysMean += 7;
-			daysPerPerson[weeksSchedule[i]] += 4;
-			daysPerPerson[weekEndsSchedule[i]] += 3;
+			daysPerPerson[weeksSchedule[i]] += 5;
+			daysPerPerson[weekEndsSchedule[i]] += 4;
 			weekendsPerPerson[weekEndsSchedule[i]]++;
 		}
 		daysMean /= numberOfPeople;
@@ -57,7 +57,7 @@ public class OnCallProblem {
 		daysDeviation = Math.sqrt(daysDeviation/numberOfPeople);
 		weekendsDeviation = Math.sqrt(weekendsDeviation/numberOfPeople);
 		
-		return daysDeviation*5 + weekendsDeviation*4;
+		return daysDeviation*0.5 + weekendsDeviation*1;
 	}
 	
 	public boolean checkSchedule(OnCallSchedule schedule) {

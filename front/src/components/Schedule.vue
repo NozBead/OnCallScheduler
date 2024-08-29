@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { OnCallSchedule } from '../models/OnCallSchedule'
-import { toCssColor } from '../models/Color'
 import type { Employee } from '../models/Employee'
 import type { ResolvedSchedule } from '../models/ResolvedSchedule'
+import EmployeeChip from './EmployeeChip.vue'
 import { computed } from 'vue'
 
 const props = defineProps<{
@@ -26,22 +26,23 @@ const resolvedSchedule = computed(() => {
   <table>
     <thead>
       <tr>
-        <th>Lundi</th>
-        <th>Mardi</th>
-        <th>Mercredi</th>
-        <th>Jeudi</th>
-        <th>Vendredi</th>
-        <th>Samedi</th>
-        <th>Dimanche</th>
+        <th>Semaine</th>
+        <th>Jours de semaine</th>
+        <th>Weekend</th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="week in resolvedSchedule">
-        <td :style="{ backgroundColor: toCssColor(week.week.colorIndex) }" colspan="5">
-          {{ week.week.name }}
+      <tr v-for="(week, index) in resolvedSchedule">
+        <th id="">{{ index }}</th>
+        <td>
+          <div>
+            <EmployeeChip :employee="week.week" :index="0" :editable="false" />
+          </div>
         </td>
-        <td :style="{ backgroundColor: toCssColor(week.weekend.colorIndex) }" colspan="2">
-          {{ week.weekend.name }}
+        <td>
+          <div>
+            <EmployeeChip :employee="week.weekend" :index="0" :editable="false" />
+          </div>
         </td>
       </tr>
     </tbody>
@@ -49,13 +50,20 @@ const resolvedSchedule = computed(() => {
 </template>
 
 <style scoped>
-td {
-  text-align: center;
-  padding: 1em;
+td > div {
+  display: flex;
+  justify-content: center;
 }
+
 th {
-  padding: 2em;
+  padding: 1em;
   color: rgb(243, 243, 243);
   background-color: rgb(20, 165, 117);
+}
+
+h2 {
+  font-size: 1.5em;
+  padding: 0;
+  margin: 0;
 }
 </style>
