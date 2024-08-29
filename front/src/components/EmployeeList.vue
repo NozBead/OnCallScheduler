@@ -32,14 +32,17 @@ function deleteEmployee(employee: number) {
           :editable="true"
         />
       </li>
+      <li>
+        <button @click="$emit('add')">+</button>
+      </li>
     </ul>
-    <button @click="$emit('add')">+</button>
   </div>
 </template>
 
 <style scoped>
 ul {
   display: flex;
+  align-items: center;
   list-style: none;
   padding: 0;
   > * {

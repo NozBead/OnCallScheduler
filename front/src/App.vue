@@ -106,6 +106,9 @@ async function generateSchedule() {
 
 <template>
   <main>
+    <div id="actions">
+      <button @click="generateSchedule">Générer</button>
+    </div>
     <div id="list">
       <EmployeeList
         @add="addEmployee"
@@ -115,9 +118,6 @@ async function generateSchedule() {
       />
     </div>
     <div id="schedule">
-      <div id="actions">
-        <button @click="generateSchedule">Générer</button>
-      </div>
       <Schedule v-if="schedule" :employees="employees" :schedule="schedule" />
     </div>
   </main>

@@ -19,7 +19,12 @@ const name = ref()
 
 <template>
   <div id="employee">
-    <span ref="name" :contentEditable="editable" @focusout="$emit('change', index, name.innerText)">
+    <span
+      ref="name"
+      spellcheck="false"
+      :contentEditable="editable"
+      @focusout="$emit('change', index, name.innerText)"
+    >
       {{ employee.name }}
     </span>
     <button v-if="editable" @click="$emit('delete', index)">x</button>

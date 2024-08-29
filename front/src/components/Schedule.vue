@@ -60,10 +60,4 @@ th {
   color: rgb(243, 243, 243);
   background-color: rgb(20, 165, 117);
 }
-
-h2 {
-  font-size: 1.5em;
-  padding: 0;
-  margin: 0;
-}
 </style>
