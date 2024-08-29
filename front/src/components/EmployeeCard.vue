@@ -7,7 +7,7 @@ const props = defineProps<{
   employee: Employee
 }>()
 const emit = defineEmits<{
-  delete: [toDelete: Employee]
+  delete: []
 }>()
 
 const color = computed(() => toCssColor(props.employee.colorIndex))
@@ -18,7 +18,7 @@ const color = computed(() => toCssColor(props.employee.colorIndex))
     <h2>
       {{ employee.name }}
     </h2>
-    <button @click="$emit('delete', employee)">Delete</button>
+    <button @click="$emit('delete')">Delete</button>
   </div>
 </template>
 

@@ -1,4 +1,4 @@
 export interface Employee {
-  name: string,
+  name: string
   colorIndex: number
 }

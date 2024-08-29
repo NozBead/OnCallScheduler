@@ -6,16 +6,14 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import fr.funetdelire.oncallscheduler.problem.OnCallProblem;
 import fr.funetdelire.oncallscheduler.problem.OnCallSchedule;
 import fr.funetdelire.oncallscheduler.problem.optimizer.OnCallHillClimber;
 import fr.funetdelire.oncallscheduler.problem.solver.OnCallScheduleRandom;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path="/scheduler")
 public class OnCallSchedulerController {
