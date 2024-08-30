@@ -21,9 +21,10 @@ function deleteEmployee(employee: number) {
 </script>
 
 <template>
-  <div>
+  <div id="list">
+    <span>({{ employees.length }})</span>
     <ul>
-      <li v-for="(employee, index) in props.employees">
+      <li v-for="(employee, index) in employees">
         <EmployeeChip
           @delete="deleteEmployee"
           @change="changeEmployee"
@@ -33,20 +34,45 @@ function deleteEmployee(employee: number) {
         />
       </li>
       <li>
-        <button @click="$emit('add')">+</button>
+        <div id="add" @click="$emit('add')">+</div>
       </li>
     </ul>
   </div>
 </template>
 
 <style scoped>
+#list {
+  display: flex;
+  align-items: center;
+
+  span {
+    font-style: italic;
+    font-size: 0.8rem;
+    color: grey;
+  }
+}
+
 ul {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   list-style: none;
   padding: 0;
   > * {
-    margin: 0.5em 0.5em;
+    margin: 0.5rem 0.5rem;
   }
+}
+
+#add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  font-weight: bold;
+  font-size: 2rem;
+  color: white;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: rgb(25, 123, 25);
 }
 </style>

@@ -20,43 +20,65 @@ const resolvedSchedule = computed(() => {
   }
   return resolved
 })
+
+const splits = computed(() => {
+  const n = 3
+  console.log('exec')
+  const size = Math.round(resolvedSchedule.value.length / n) + 1
+  const splits = new Array<Array<number>>()
+  for (let i = 0; i < n; i++) {
+    splits.push([i * size, (i + 1) * size])
+  }
+  return splits
+})
 </script>
 
 <template>
-  <table>
-    <thead>
-      <tr>
-        <th>Semaine</th>
-        <th>Jours de semaine</th>
-        <th>Weekend</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(week, index) in resolvedSchedule">
-        <th id="">{{ index }}</th>
-        <td>
-          <div>
-            <EmployeeChip :employee="week.week" :index="0" :editable="false" />
-          </div>
-        </td>
-        <td>
-          <div>
-            <EmployeeChip :employee="week.weekend" :index="0" :editable="false" />
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div id="tables">
+    <table v-for="[start, end] in splits" :start="start" :end="end">
+      <thead>
+        <tr>
+          <th>Semaine</th>
+          <th>Jours de semaine</th>
+          <th>Weekend</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(week, index) in resolvedSchedule.slice(start, end)">
+          <th id="">{{ index }}</th>
+          <td>
+            <div>
+              <EmployeeChip :employee="week.week" :index="0" :editable="false" />
+            </div>
+          </td>
+          <td>
+            <div>
+              <EmployeeChip :employee="week.weekend" :index="0" :editable="false" />
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <style scoped>
+#tables {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  > * {
+    margin: 2rem;
+  }
+}
+
 td > div {
   display: flex;
   justify-content: center;
 }
 
 th {
-  padding: 1em;
+  padding: 1rem;
   color: rgb(243, 243, 243);
   background-color: rgb(20, 165, 117);
 }

@@ -15,6 +15,17 @@ const emit = defineEmits<{
 
 const color = computed(() => toCssColor(props.employee.colorIndex))
 const name = ref()
+
+function select(element: HTMLElement) {
+  getSelection()?.selectAllChildren(element)
+}
+
+function onKey(e: KeyboardEvent) {
+  if (e.key == 'Enter') {
+    name.value.blur()
+    getSelection()?.empty()
+  }
+}
 </script>
 
 <template>
@@ -23,40 +34,37 @@ const name = ref()
       ref="name"
       spellcheck="false"
       :contentEditable="editable"
+      @click="select(name)"
       @focusout="$emit('change', index, name.innerText)"
+      @keypress="onKey"
     >
       {{ employee.name }}
     </span>
-    <button v-if="editable" @click="$emit('delete', index)">x</button>
+    <div id="delete" v-if="editable" @click="$emit('delete', index)">+</div>
   </div>
 </template>
 
 <style scoped>
+#delete {
+  cursor: pointer;
+  color: white;
+  padding: 0;
+  margin-left: 0.5rem;
+
+  border-radius: 100%;
+  font-weight: bold;
+  font-size: 1.8rem;
+  line-height: 1.8rem;
+  rotate: 45deg;
+}
+
 #employee {
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
   background-color: v-bind(color);
   border-radius: 1.5rem;
   color: white;
   width: max-content;
-
-  > * {
-    margin: 0 0.2rem;
-  }
-}
-
-button {
-  background-color: v-bind(color);
-  border-radius: 100%;
-  height: 1.2rem;
-  padding: 0 0.3rem;
-  border: white 1px solid;
-  cursor: pointer;
-  color: white;
-
-  img {
-    height: 3em;
-  }
 }
 </style>
