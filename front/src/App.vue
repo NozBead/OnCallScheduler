@@ -81,6 +81,7 @@ function changeEmployee(toChange: number, newName: string) {
     <div id="actions">
       <button @click="generateSchedule">Générer</button>
       <input type="date" :value="date.toISOString().substring(0, 10)" step="7" />
+      <input type="range" min="0" max="104" step="1" />
     </div>
     <div id="schedule">
       <Schedule v-if="schedule" :employees="employees.employees" :schedule="schedule" />
@@ -102,5 +103,11 @@ main {
   display: flex;
   justify-content: center;
   padding: 1rem;
+}
+
+@media print {
+  #actions {
+    display: none;
+  }
 }
 </style>

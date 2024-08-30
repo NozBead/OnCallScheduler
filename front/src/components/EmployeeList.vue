@@ -75,4 +75,10 @@ ul {
   height: 2.5rem;
   background-color: rgb(25, 123, 25);
 }
+
+@media print {
+  #add {
+    display: none;
+  }
+}
 </style>

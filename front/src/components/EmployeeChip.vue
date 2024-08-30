@@ -67,4 +67,10 @@ function onKey(e: KeyboardEvent) {
   color: white;
   width: max-content;
 }
+
+@media print {
+  #delete {
+    display: none;
+  }
+}
 </style>
