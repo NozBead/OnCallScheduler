@@ -10,14 +10,6 @@ const emit = defineEmits<{
   add: []
   change: [toChange: number, newName: string]
 }>()
-
-function changeEmployee(employee: number, newName: string) {
-  emit('change', employee, newName)
-}
-
-function deleteEmployee(employee: number) {
-  emit('delete', employee)
-}
 </script>
 
 <template>
@@ -26,15 +18,15 @@ function deleteEmployee(employee: number) {
     <ul>
       <li v-for="(employee, index) in employees">
         <EmployeeChip
-          @delete="deleteEmployee"
-          @change="changeEmployee"
+          @delete="(toDelete) => emit('delete', toDelete)"
+          @change="(toChange, newName) => emit('change', toChange, newName)"
           :employee="employee"
           :index="index"
           :editable="true"
         />
       </li>
       <li>
-        <div id="add" @click="$emit('add')">+</div>
+        <div id="add" @click="emit('add')">+</div>
       </li>
     </ul>
   </div>
@@ -70,7 +62,6 @@ ul {
   border-radius: 100%;
   font-weight: bold;
   font-size: 2rem;
-  color: white;
   width: 2.5rem;
   height: 2.5rem;
   background-color: rgb(25, 123, 25);

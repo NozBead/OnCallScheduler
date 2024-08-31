@@ -47,7 +47,6 @@ function onKey(e: KeyboardEvent) {
 <style scoped>
 #delete {
   cursor: pointer;
-  color: white;
   padding: 0;
   margin-left: 0.5rem;
 
@@ -62,10 +61,9 @@ function onKey(e: KeyboardEvent) {
   padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
+  justify-content: center;
   background-color: v-bind(color);
   border-radius: 1.5rem;
-  color: white;
-  width: max-content;
 }
 
 @media print {

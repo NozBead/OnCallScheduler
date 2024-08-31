@@ -5,8 +5,6 @@ export class EmployeeCollection {
   employees: Array<Employee> = new Array()
   freeColorIndexes: Array<number> = new Array()
 
-  constructor() {}
-
   length() {
     return this.employees.length
   }

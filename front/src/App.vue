@@ -56,25 +56,15 @@ async function generateSchedule() {
     schedule.value = await result.json()
   }
 }
-
-function addEmployee() {
-  employees.value.add()
-}
-function deleteEmployee(toDelete: number) {
-  employees.value.delete(toDelete)
-}
-function changeEmployee(toChange: number, newName: string) {
-  employees.value.update(toChange, newName)
-}
 </script>
 
 <template>
   <main>
     <div id="list">
       <EmployeeList
-        @add="addEmployee"
-        @delete="deleteEmployee"
-        @change="changeEmployee"
+        @add="() => employees.add()"
+        @delete="(toDelete) => employees.delete(toDelete)"
+        @change="(toChange, newName) => employees.update(toChange, newName)"
         :employees="employees.employees"
       />
     </div>
@@ -84,7 +74,12 @@ function changeEmployee(toChange: number, newName: string) {
       <input type="range" min="0" max="104" step="1" />
     </div>
     <div id="schedule">
-      <Schedule v-if="schedule" :employees="employees.employees" :schedule="schedule" />
+      <Schedule
+        v-if="schedule"
+        :employees="employees.employees"
+        :schedule="schedule"
+        :date="date"
+      />
     </div>
   </main>
 </template>
