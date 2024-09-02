@@ -34,13 +34,13 @@ function onKey(e: KeyboardEvent) {
       ref="name"
       spellcheck="false"
       :contentEditable="editable"
-      @click="select(name)"
-      @focusout="$emit('change', index, name.innerText)"
+      @focusin="select(name)"
+      @focusout="emit('change', index, name.innerText)"
       @keypress="onKey"
     >
       {{ employee.name }}
     </span>
-    <div id="delete" v-if="editable" @click="$emit('delete', index)">+</div>
+    <div id="delete" v-if="editable" @click="emit('delete', index)">+</div>
   </div>
 </template>
 

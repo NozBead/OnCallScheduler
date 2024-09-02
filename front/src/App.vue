@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import EmployeeList from './components/EmployeeList.vue'
 import Schedule from './components/Schedule.vue'
+import Action from './components/Action.vue'
 import { EmployeeCollection } from './models/EmployeeCollection'
 import type { OnCallSchedule } from './models/OnCallSchedule'
 import { ref, watch, computed } from 'vue'
@@ -9,9 +10,10 @@ const employees = ref(new EmployeeCollection())
 const employeesLength = computed(() => employees.value.length())
 const schedule = ref<OnCallSchedule>()
 
-const date = new Date()
-date.setDate(date.getDate() - (date.getDay() - 1) + 7)
+const date = ref(new Date())
+date.value.setDate(date.value.getDate() - (date.value.getDay() - 1) + 7)
 
+const savedDate = localStorage.getItem('date')
 const savedSchedule = localStorage.getItem('schedule')
 const savedEmployees = localStorage.getItem('employees')
 if (savedEmployees) {
@@ -22,6 +24,9 @@ if (savedEmployees) {
 }
 if (savedSchedule) {
   schedule.value = JSON.parse(savedSchedule)
+}
+if (savedDate) {
+  date.value = new Date(JSON.parse(savedDate))
 }
 
 watch(
@@ -48,39 +53,33 @@ watch(schedule, async (newSchedule) => {
   }
 })
 
+watch(date, async () => {
+  schedule.value = undefined
+})
+
 async function generateSchedule() {
   const result = await fetch(
-    `http://localhost:8080/scheduler?startDate=${date.toISOString().substring(0, 10)}&numberOfPeople=${employees.value.length()}&numberOfWeeks=52`
+    `http://localhost:8080/scheduler?startDate=${date.value.toISOString().substring(0, 10)}&numberOfPeople=${employees.value.length()}&numberOfWeeks=52`
   )
   if (result.ok) {
     schedule.value = await result.json()
+    localStorage.setItem('date', JSON.stringify(date.value))
   }
 }
 </script>
 
 <template>
   <main>
-    <div id="list">
+    <div id="control">
       <EmployeeList
         @add="() => employees.add()"
         @delete="(toDelete) => employees.delete(toDelete)"
         @change="(toChange, newName) => employees.update(toChange, newName)"
         :employees="employees.employees"
       />
+      <Action @generate="generateSchedule" @change="(newDate) => (date = newDate)" :date="date" />
     </div>
-    <div id="actions">
-      <button @click="generateSchedule">Générer</button>
-      <input type="date" :value="date.toISOString().substring(0, 10)" step="7" />
-      <input type="range" min="0" max="104" step="1" />
-    </div>
-    <div id="schedule">
-      <Schedule
-        v-if="schedule"
-        :employees="employees.employees"
-        :schedule="schedule"
-        :date="date"
-      />
-    </div>
+    <Schedule v-if="schedule" :employees="employees.employees" :schedule="schedule" :date="date" />
   </main>
 </template>
 
@@ -88,16 +87,14 @@ async function generateSchedule() {
 main {
   display: flex;
   flex-direction: column;
-  align-items: start;
-  > * {
-    margin: 0 2rem;
-  }
+  align-items: center;
 }
 
-#actions {
+#control {
   display: flex;
-  justify-content: center;
-  padding: 1rem;
+}
+#list {
+  margin: 0 1rem;
 }
 
 @media print {

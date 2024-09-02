@@ -64,7 +64,8 @@ ul {
   font-size: 2rem;
   width: 2.5rem;
   height: 2.5rem;
-  background-color: rgb(25, 123, 25);
+  box-shadow: 0 0 12px hsla(0, 0%, 0%, 0.5);
+  background-color: var(--primary-color);
 }
 
 @media print {

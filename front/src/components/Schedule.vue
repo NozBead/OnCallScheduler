@@ -56,30 +56,56 @@ const resolvedSchedule = computed(() => resolve(props.date, props.schedule, prop
             </th>
           </tr>
           <tr>
-            <th v-for="day in month.days">{{ days[day.getDay()] }} {{ day.getDate() }}</th>
+            <th
+              v-for="day in month.days"
+              :class="day.getDay() == 0 || day.getDay() == 6 ? 'greyed' : ''"
+            >
+              {{ days[day.getDay()] }}
+            </th>
+          </tr>
+          <tr>
+            <th
+              :class="day.getDay() == 0 || day.getDay() == 6 ? 'greyed' : ''"
+              v-for="day in month.days"
+            >
+              {{ day.getDate() }}
+            </th>
           </tr>
         </thead>
         <tbody>
-          <template v-for="week in month.weeks">
-            <td
-              v-if="7 - week.overlap.missing - calcWeekEndSize(week.overlap) != 0"
-              :colspan="7 - week.overlap.missing - calcWeekEndSize(week.overlap)"
-            >
-              <div class="employee-schedule">
-                <EmployeeChip v-if="week.week" :index="0" :editable="false" :employee="week.week" />
-              </div>
-            </td>
-            <td v-if="calcWeekEndSize(week.overlap) != 0" :colspan="calcWeekEndSize(week.overlap)">
-              <div class="employee-schedule">
-                <EmployeeChip
-                  v-if="week.weekend"
-                  :index="0"
-                  :editable="false"
-                  :employee="week.weekend"
-                />
-              </div>
-            </td>
-          </template>
+          <tr id="days-back">
+            <td v-for="day in month.days"></td>
+          </tr>
+          <tr id="days">
+            <template v-for="week in month.weeks">
+              <td
+                v-if="7 - week.overlap.missing - calcWeekEndSize(week.overlap) != 0"
+                :colspan="7 - week.overlap.missing - calcWeekEndSize(week.overlap)"
+              >
+                <div class="employee-schedule">
+                  <EmployeeChip
+                    v-if="week.week"
+                    :index="0"
+                    :editable="false"
+                    :employee="week.week"
+                  />
+                </div>
+              </td>
+              <td
+                v-if="calcWeekEndSize(week.overlap) != 0"
+                :colspan="calcWeekEndSize(week.overlap)"
+              >
+                <div class="employee-schedule">
+                  <EmployeeChip
+                    v-if="week.weekend"
+                    :index="0"
+                    :editable="false"
+                    :employee="week.weekend"
+                  />
+                </div>
+              </td>
+            </template>
+          </tr>
         </tbody>
       </table>
     </template>
@@ -88,10 +114,17 @@ const resolvedSchedule = computed(() => resolve(props.date, props.schedule, prop
 
 <style scoped>
 #tables {
+  margin: 0 2rem;
+  align-self: stretch;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: start;
-  align-items: start;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+table {
+  border-collapse: collapse;
+  padding: 0 0.2rem;
+  border-radius: 10px;
 }
 
 td > div {
@@ -99,13 +132,32 @@ td > div {
   justify-content: center;
 }
 
-th {
-  padding: 0.5rem;
-  background-color: rgb(20, 165, 117);
+th,
+td {
+  background-color: var(--primary-color);
+  padding: 0.3rem;
+  border: solid 1px hsla(0, 0%, 100%, 0.35);
+}
+
+.greyed {
+  background-color: var(--accent-color);
 }
 
 .employee-schedule {
   display: flex;
   flex-direction: column;
+}
+
+#days-back {
+  height: 3rem;
+}
+
+#days {
+  position: relative;
+  top: -2.8em;
+  td {
+    border: none;
+    background-color: unset;
+  }
 }
 </style>
