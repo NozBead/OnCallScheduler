@@ -26,10 +26,8 @@ const emit = defineEmits<{
           :editable="true"
         />
       </li>
-      <li>
-        <div id="add" @click="emit('add')">+</div>
-      </li>
     </ul>
+    <div id="add" @click="emit('add')">+</div>
   </div>
 </template>
 
@@ -37,6 +35,7 @@ const emit = defineEmits<{
 #list {
   display: flex;
   align-items: center;
+  justify-content: center;
 
   span {
     font-style: italic;
@@ -49,6 +48,7 @@ ul {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   list-style: none;
   padding: 0;
   > * {
@@ -57,14 +57,15 @@ ul {
 }
 
 #add {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 100%;
   font-weight: bold;
   font-size: 2rem;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 3rem;
+  height: 3rem;
   box-shadow: 0 0 12px hsla(0, 0%, 0%, 0.5);
   background-color: var(--primary-color);
 }

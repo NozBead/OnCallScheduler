@@ -11,6 +11,7 @@ const employeesLength = computed(() => employees.value.length())
 const schedule = ref<OnCallSchedule>()
 
 const date = ref(new Date())
+const weekNumber = ref(52)
 date.value.setDate(date.value.getDate() - (date.value.getDay() - 1) + 7)
 
 const savedDate = localStorage.getItem('date')
@@ -59,7 +60,7 @@ watch(date, async () => {
 
 async function generateSchedule() {
   const result = await fetch(
-    `http://localhost:8080/scheduler?startDate=${date.value.toISOString().substring(0, 10)}&numberOfPeople=${employees.value.length()}&numberOfWeeks=52`
+    `http://localhost:8080/scheduler?startDate=${date.value.toISOString().substring(0, 10)}&numberOfPeople=${employees.value.length()}&numberOfWeeks=${weekNumber.value}`
   )
   if (result.ok) {
     schedule.value = await result.json()
@@ -77,7 +78,13 @@ async function generateSchedule() {
         @change="(toChange, newName) => employees.update(toChange, newName)"
         :employees="employees.employees"
       />
-      <Action @generate="generateSchedule" @change="(newDate) => (date = newDate)" :date="date" />
+      <Action
+        @generate="generateSchedule"
+        @changeDate="(newDate) => (date = newDate)"
+        @changeWeekNumber="(newWeekNumber) => (weekNumber = newWeekNumber)"
+        :weekNumber="weekNumber"
+        :date="date"
+      />
     </div>
     <Schedule v-if="schedule" :employees="employees.employees" :schedule="schedule" :date="date" />
   </main>

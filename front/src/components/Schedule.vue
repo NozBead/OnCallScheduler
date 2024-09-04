@@ -62,16 +62,10 @@ const resolvedSchedule = computed(() => resolve(props.date, props.schedule, prop
             <td v-for="day in month.days"></td>
           </tr>
           <tr id="weekdays">
-            <template v-for="(week, index) in month.weeks">
+            <template v-for="week in month.weeks">
               <td v-if="week.overlap.weekSize != 0" :colspan="week.overlap.weekSize">
                 <div class="employee-schedule">
-                  <EmployeeChip
-                    v-if="week.week"
-                    :stats="false"
-                    :index="0"
-                    :editable="false"
-                    :employee="week.week"
-                  />
+                  <EmployeeChip :stats="false" :index="0" :editable="false" :employee="week.week" />
                 </div>
               </td>
               <td v-if="week.overlap.weekEndSize != 0" :colspan="week.overlap.weekEndSize"></td>
@@ -90,7 +84,6 @@ const resolvedSchedule = computed(() => resolve(props.date, props.schedule, prop
               >
                 <div class="employee-schedule">
                   <EmployeeChip
-                    v-if="week.weekend"
                     :stats="false"
                     :index="0"
                     :editable="false"

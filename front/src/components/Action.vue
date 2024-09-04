@@ -2,14 +2,17 @@
 import { ref } from 'vue'
 const props = defineProps<{
   date: Date
+  weekNumber: Number
 }>()
 
 const emit = defineEmits<{
-  change: [newDate: Date]
+  changeDate: [newDate: Date]
+  changeWeekNumber: [newWeekNumber: number]
   generate: []
 }>()
 
 const datePicker = ref()
+const weekStepper = ref()
 </script>
 
 <template>
@@ -20,9 +23,17 @@ const datePicker = ref()
       ref="datePicker"
       :value="date.toISOString().substring(0, 10)"
       step="7"
-      @change="() => emit('change', new Date(datePicker.value))"
+      @change="() => emit('changeDate', new Date(datePicker.value))"
     />
-    <input type="range" min="0" max="104" step="1" />
+    <input
+      :value="weekNumber"
+      ref="weekStepper"
+      type="number"
+      min="0"
+      max="104"
+      step="1"
+      @input="() => emit('changeWeekNumber', weekStepper.value)"
+    />
   </div>
 </template>
 
@@ -38,7 +49,7 @@ const datePicker = ref()
 }
 
 button,
-input[type='date'] {
+input {
   cursor: pointer;
   background-color: var(--primary-color);
   box-shadow: 0 0 12px hsla(0, 0%, 0%, 0.5);

@@ -7,8 +7,8 @@ export interface Overlap {
 }
 
 export interface ResolvedWeek {
-  week: Employee | undefined
-  weekend: Employee | undefined
+  week: Employee
+  weekend: Employee
   overlap: Overlap
 }
 
@@ -73,6 +73,10 @@ export function resolve(
     overlap = {
       weekSize: 5,
       weekEndSize: 2
+    }
+
+    if (i == schedule.weeksSchedule.length - 1) {
+      resolved.push(currentMonth)
     }
   }
   return resolved
