@@ -93,6 +93,7 @@ main {
 #control {
   display: flex;
 }
+
 #list {
   margin: 0 1rem;
 }

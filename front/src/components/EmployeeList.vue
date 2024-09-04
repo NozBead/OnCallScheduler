@@ -20,6 +20,7 @@ const emit = defineEmits<{
         <EmployeeChip
           @delete="(toDelete) => emit('delete', toDelete)"
           @change="(toChange, newName) => emit('change', toChange, newName)"
+          :stats="true"
           :employee="employee"
           :index="index"
           :editable="true"

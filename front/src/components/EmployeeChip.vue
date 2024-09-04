@@ -7,6 +7,7 @@ const props = defineProps<{
   employee: Employee
   index: number
   editable: boolean
+  stats: boolean
 }>()
 const emit = defineEmits<{
   delete: [toDelete: number]
@@ -29,18 +30,21 @@ function onKey(e: KeyboardEvent) {
 </script>
 
 <template>
-  <div id="employee">
-    <span
-      ref="name"
-      spellcheck="false"
-      :contentEditable="editable"
-      @focusin="select(name)"
-      @focusout="emit('change', index, name.innerText)"
-      @keypress="onKey"
-    >
-      {{ employee.name }}
-    </span>
-    <div id="delete" v-if="editable" @click="emit('delete', index)">+</div>
+  <div id="container">
+    <div id="employee">
+      <span
+        ref="name"
+        spellcheck="false"
+        :contentEditable="editable"
+        @focusin="select(name)"
+        @focusout="emit('change', index, name.innerText)"
+        @keypress="onKey"
+      >
+        {{ employee.name }}
+      </span>
+      <div id="delete" v-if="editable" @click="emit('delete', index)">+</div>
+    </div>
+    <div v-if="stats" id="stats">{{ employee.daysOnCall }}J {{ employee.weekendsOnCall }}WE</div>
   </div>
 </template>
 
@@ -49,7 +53,6 @@ function onKey(e: KeyboardEvent) {
   cursor: pointer;
   padding: 0;
   margin-left: 0.5rem;
-
   border-radius: 100%;
   font-weight: bold;
   font-size: 1.8rem;
@@ -58,6 +61,7 @@ function onKey(e: KeyboardEvent) {
 }
 
 #employee {
+  flex-grow: 1;
   padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
@@ -66,9 +70,26 @@ function onKey(e: KeyboardEvent) {
   border-radius: 1.5rem;
 }
 
+#container {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#stats {
+  margin: 0.5rem 0;
+  align-self: center;
+  font-weight: bold;
+}
+
 @media print {
   #delete {
     display: none;
+  }
+
+  #stats {
+    color: grey;
   }
 }
 </style>

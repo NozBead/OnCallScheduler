@@ -26,5 +26,5 @@ body {
 
 @page {
   size: a4 portrait;
-  margin: 0;
+  margin: 1rem 0;
 }

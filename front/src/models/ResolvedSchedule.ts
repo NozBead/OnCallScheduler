@@ -1,14 +1,9 @@
 import type { Employee } from './Employee'
 import type { OnCallSchedule } from './OnCallSchedule'
 
-export enum OverlapSide {
-  LEFT,
-  RIGHT
-}
-
 export interface Overlap {
-  missing: number
-  side: OverlapSide
+  weekSize: number
+  weekEndSize: number
 }
 
 export interface ResolvedWeek {
@@ -37,22 +32,28 @@ export function resolve(
     days: new Array<Date>()
   }
 
-  let overlap = 0
+  let overlap = {
+    weekSize: 5,
+    weekEndSize: 2
+  }
   for (let i = 0; i < schedule.weeksSchedule.length; i++) {
     for (let j = 0; j < 7; j++) {
       if (currentMonth.date.getMonth() != startDate.getMonth()) {
         resolved.push(currentMonth)
         if (j <= 6) {
-          currentMonth.weeks.push({
+          let weekEndSize = j - 5
+          weekEndSize = weekEndSize < 0 ? 0 : weekEndSize
+          const newWeek = {
             week: employees[schedule.weeksSchedule[i]],
             weekend: employees[schedule.weekEndsSchedule[i]],
             overlap: {
-              missing: 7 - j,
-              side: OverlapSide.LEFT
+              weekSize: j - weekEndSize,
+              weekEndSize: weekEndSize
             }
-          })
-
-          overlap = j
+          }
+          overlap.weekSize = 5 - newWeek.overlap.weekSize
+          overlap.weekEndSize = 2 - newWeek.overlap.weekEndSize
+          currentMonth.weeks.push(newWeek)
         }
         currentMonth = {
           weeks: new Array<ResolvedWeek>(),
@@ -67,12 +68,12 @@ export function resolve(
     currentMonth.weeks.push({
       week: employees[schedule.weeksSchedule[i]],
       weekend: employees[schedule.weekEndsSchedule[i]],
-      overlap: {
-        missing: overlap,
-        side: overlap == 0 ? OverlapSide.LEFT : OverlapSide.RIGHT
-      }
+      overlap: overlap
     })
-    overlap = 0
+    overlap = {
+      weekSize: 5,
+      weekEndSize: 2
+    }
   }
   return resolved
 }
