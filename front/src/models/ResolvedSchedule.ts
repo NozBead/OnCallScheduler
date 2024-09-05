@@ -6,16 +6,35 @@ export interface Overlap {
   weekEndSize: number
 }
 
-export interface ResolvedWeek {
+export class ResolvedWeek {
   week: Employee
   weekend: Employee
   overlap: Overlap
+
+  constructor(week: Employee, weekend: Employee, overlap: Overlap) {
+    this.week = week
+    this.weekend = weekend
+    this.overlap = overlap
+  }
+
+  clone(): ResolvedWeek {
+    return new ResolvedWeek(this.week, this.weekend, {
+      weekSize: this.overlap.weekSize,
+      weekEndSize: this.overlap.weekEndSize
+    })
+  }
 }
 
-export interface ResolvedMonth {
+export class ResolvedMonth {
   weeks: Array<ResolvedWeek>
   date: Date
   days: Array<Date>
+
+  constructor(startDate: Date) {
+    this.weeks = new Array<ResolvedWeek>()
+    this.date = new Date(startDate)
+    this.days = new Array<Date>()
+  }
 }
 
 export function resolve(
@@ -26,54 +45,38 @@ export function resolve(
   const resolved = new Array<ResolvedMonth>()
   const startDate = new Date(date)
 
-  let currentMonth = {
-    weeks: new Array<ResolvedWeek>(),
-    date: new Date(startDate),
-    days: new Array<Date>()
-  }
+  let currentMonth = new ResolvedMonth(startDate)
 
-  let overlap = {
-    weekSize: 5,
-    weekEndSize: 2
-  }
   for (let i = 0; i < schedule.weeksSchedule.length; i++) {
+    const newWeek = new ResolvedWeek(
+      employees[schedule.weeksSchedule[i]],
+      employees[schedule.weekEndsSchedule[i]],
+      {
+        weekSize: 5,
+        weekEndSize: 2
+      }
+    )
     for (let j = 0; j < 7; j++) {
       if (currentMonth.date.getMonth() != startDate.getMonth()) {
         resolved.push(currentMonth)
         if (j <= 6) {
           let weekEndSize = j - 5
           weekEndSize = weekEndSize < 0 ? 0 : weekEndSize
-          const newWeek = {
-            week: employees[schedule.weeksSchedule[i]],
-            weekend: employees[schedule.weekEndsSchedule[i]],
-            overlap: {
-              weekSize: j - weekEndSize,
-              weekEndSize: weekEndSize
-            }
-          }
-          overlap.weekSize = 5 - newWeek.overlap.weekSize
-          overlap.weekEndSize = 2 - newWeek.overlap.weekEndSize
-          currentMonth.weeks.push(newWeek)
+          newWeek.overlap.weekSize = j - weekEndSize
+          newWeek.overlap.weekEndSize = weekEndSize
+
+          currentMonth.weeks.push(newWeek.clone())
+
+          newWeek.overlap.weekSize = 5 - newWeek.overlap.weekSize
+          newWeek.overlap.weekEndSize = 2 - newWeek.overlap.weekEndSize
         }
-        currentMonth = {
-          weeks: new Array<ResolvedWeek>(),
-          date: new Date(startDate),
-          days: new Array<Date>()
-        }
+        currentMonth = new ResolvedMonth(startDate)
       }
       currentMonth.days.push(new Date(startDate))
       startDate.setDate(startDate.getDate() + 1)
     }
 
-    currentMonth.weeks.push({
-      week: employees[schedule.weeksSchedule[i]],
-      weekend: employees[schedule.weekEndsSchedule[i]],
-      overlap: overlap
-    })
-    overlap = {
-      weekSize: 5,
-      weekEndSize: 2
-    }
+    currentMonth.weeks.push(newWeek)
 
     if (i == schedule.weeksSchedule.length - 1) {
       resolved.push(currentMonth)

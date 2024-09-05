@@ -165,4 +165,10 @@ td {
 #weekend {
   top: -4.7rem;
 }
+
+@media only screen and (max-width: 800px) {
+  #tables {
+    overflow: scroll;
+  }
+}
 </style>

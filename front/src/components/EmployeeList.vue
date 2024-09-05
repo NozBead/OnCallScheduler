@@ -75,4 +75,10 @@ ul {
     display: none;
   }
 }
+
+@media only screen and (max-width: 800px) {
+  #list {
+    flex-wrap: wrap;
+  }
+}
 </style>

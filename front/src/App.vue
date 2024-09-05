@@ -60,7 +60,7 @@ watch(date, async () => {
 
 async function generateSchedule() {
   const result = await fetch(
-    `http://localhost:8080/scheduler?startDate=${date.value.toISOString().substring(0, 10)}&numberOfPeople=${employees.value.length()}&numberOfWeeks=${weekNumber.value}`
+    `http://funetdelire.fr:8082/scheduler?startDate=${date.value.toISOString().substring(0, 10)}&numberOfPeople=${employees.value.length()}&numberOfWeeks=${weekNumber.value}`
   )
   if (result.ok) {
     schedule.value = await result.json()
@@ -108,6 +108,12 @@ main {
 @media print {
   #actions {
     display: none;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  #control {
+    flex-wrap: wrap;
   }
 }
 </style>
